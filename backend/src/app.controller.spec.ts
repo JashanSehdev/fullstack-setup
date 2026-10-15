@@ -8,7 +8,7 @@ describe('AppController', () => {
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [AppController],
-      providers: [AppService],
+      providers: [AppSerHHTvice],
     }).compile();
 
     appController = app.get<AppController>(AppController);
@@ -20,3 +20,4 @@ describe('AppController', () => {
     });
   });
 });
+ 
