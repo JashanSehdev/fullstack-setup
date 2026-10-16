@@ -1,87 +1,68 @@
-import { useState } from "react";
-import { auth } from "@/lib/firebase";
-import { signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword } from "firebase/auth";
+"use client";
+
 import { useRouter } from "next/navigation";
-import { enqueueSnackbar } from "notistack";
-import { xor } from "firebase/firestore/pipelines";
-
-
+import { Box, Button, Stack, TextField } from "@mui/material";
+import { InputFields, LoginInput, loginSchema } from "./login.type";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from '@hookform/resolvers/zod';   
+import { handleEmailLogin } from "@/actions/action";
+import { useState } from "react";
+const inputs: InputFields[] = [
+  {
+    name: "email",
+    type: "email",
+    label: "Enter Your email",
+    placeholder: "Enter Your Email",
+  },
+  {
+    name: "password",
+    type: "password",
+    label: "Enter Your password",
+    placeholder: "Enter Your Password",
+  },
+];
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
 
-  const createSession = async (idToken: string) => {
-    const res = await fetch("/api/session", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${idToken}`,
-      },
-    });
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm<LoginInput>({
+    resolver: zodResolver(loginSchema),
+  });
 
-    if (!res.ok) {
-      throw new Error("Failed to create session");
-    }
-  };
-
-  const handleGoogleLogin = async () => {
-    try {
+  const onSubmit: SubmitHandler<LoginInput> = async (data: LoginInput) => {
+    try{
       setLoading(true);
-
-      const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-      const idToken = await result.user.getIdToken();
-
-      await createSession(idToken);
-
-      enqueueSnackbar({message: 'login success', variant:'success'})
-
-      router.push("/dashboard");
-      router.refresh();
-    } catch (error: any) {
-      console.error(error);
-      toast.error(error.message || "Login failed");
+      await handleEmailLogin(data.email, data.password)
+    } catch (Error) {
+      console.error(Error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
+    
   };
-
-  const handleEmailLogin = async () => {
-    try {
-      setLoading(true);
-
-      const result = await signInWithEmailAndPassword(auth, email, password);
-
-      const idToken = await result.user.getIdToken();
-      await createSession(idToken);
-
-      enqueueSnackbar({message: 'login success', variant:'success'})
-
-      router.push("/dashboard");
-      router.refresh();
-    } catch (error: any) {
-      console.error(error);
-
-      let message = "Login failed";
-
-      if (error.code === "auth/user-not-found") {
-        message = "User not found";
-      } else if (error.code === "auth/wrong-password") {
-        message = "wrong password";
-      } else if (error.code === "auth/invalid-email") {
-        message = "invalid email format";
-      }
-
-      enqueueSnackbar(message, {variant: error})
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
-    <div >
-   
-    </div>
+    <Box>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Stack direction="column">
+          {inputs.map((item) => (
+            <TextField
+              key={item.name}
+              {...register(item.name)}
+              placeholder={item.placeholder}
+              type={item.type}
+              error={!!errors[item.name]}
+              helperText={errors[item.name]?.message}
+            />
+          ))}
+
+          <Button loading={loading} type="submit" variant="contained">Login</Button>
+        </Stack>
+      </form>
+      <Button fullWidth>Google Button</Button>
+    </Box>
   );
 }
