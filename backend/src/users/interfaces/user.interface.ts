@@ -12,7 +12,8 @@ export interface IUser {
     username : string,
     email : string,
     password:string,
-    role : Role
+    role : Role,
 }
+
 
 export type DispatchUser = Omit<IUser, 'password'>

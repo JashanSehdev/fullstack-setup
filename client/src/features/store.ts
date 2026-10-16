@@ -12,12 +12,12 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { useDispatch, useSelector } from 'react-redux';
-
-import authReducer from './auth/auth.slice';
+import authReducer from './auth/auth.slice'
 
 const persistConfig = {
   key: 'root',
   storage,
+  whitelist : ['auth']
 };
 
 const rootReducer = combineReducers({

@@ -1,12 +1,11 @@
 import {
   createUserWithEmailAndPassword,
+  GoogleAuthProvider,
   signInWithEmailAndPassword,
   signInWithPopup,
-  UserCredential,
 } from "firebase/auth";
 import { auth } from "./firebase";
 import { api } from "@/api/api";
-import { GoogleAuthProvider } from "firebase/auth/web-extension";
 import { enqueueSnackbar } from "notistack";
 
 export async function signInWithEmail(email: string, password: string) {
@@ -31,8 +30,7 @@ export const handleGoogleLogin = async () => {
     if(!result.user.displayName || !result.user.email) {
       throw new Error('User Data not found')
     }
-    await sendCredentials({email : result.user.email, username: result.user.displayName})
-
+    return {username : result.user.displayName, email : result.user.email, googleId : result.user.uid}
 
   } catch (error: any) {
     console.error(error);

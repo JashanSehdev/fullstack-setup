@@ -1,16 +1,19 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Box, Button, Paper, Stack, TextField } from "@mui/material";
+import { Button, Divider, Paper, Stack, TextField, Typography } from "@mui/material";
 import { InputFields, LoginInput, loginSchema } from "./login.type";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { handleEmailLogin } from "@/actions/action";
 import { useState } from "react";
-import { signInWithEmail } from "@/lib/firebase/auth";
-import { enqueueSnackbar } from "notistack";
 import { useAppDispatch } from "@/features/store";
-import { loginUserAsync } from "@/features/auth/handle-auth/auth.action";
+import {
+  loginUserAsync,
+} from "@/features/auth/handle-auth/auth.action";
+import styles from "./login.module.css";
+import GoogleAuthButton from "@/components/auth/google-auth-button/google-auth";
+import Link from "next/link";
+
 const inputs: InputFields[] = [
   {
     name: "email",
@@ -50,26 +53,36 @@ export default function LoginPage() {
   };
 
   return (
-    <Paper sx={{ maxWidth: "12rem" }}>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack direction="column">
-          {inputs.map((item) => (
-            <TextField
-              key={item.name}
-              {...register(item.name)}
-              placeholder={item.placeholder}
-              type={item.type}
-              error={!!errors[item.name]}
-              helperText={errors[item.name]?.message}
-            />
-          ))}
+    <Paper className={styles.container}>
+      <Stack direction="column" spacing={2}>
+      <Typography variant="h3">Login</Typography>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Stack direction="column" spacing={3}>
+            {inputs.map((item) => (
+              <TextField
+                key={item.name}
+                {...register(item.name)}
+                placeholder={item.placeholder}
+                type={item.type}
+                error={!!errors[item.name]}
+                helperText={errors[item.name]?.message}
+              />
+            ))}
+            <Stack direction={"row"} spacing={1}>
+              <Typography variant="body1">Already Have an account?</Typography>
+              <Link href={"register"}>
+                <Typography>Register</Typography>
+              </Link>
+            </Stack>
 
-          <Button loading={loading} type="submit" variant="contained">
-            Login
-          </Button>
-        </Stack>
-      </form>
-      <Button fullWidth>Google Button</Button>
+            <Button loading={loading} type="submit" variant="contained">
+              Login
+            </Button>
+            <Divider />
+          </Stack>
+        </form>
+        <GoogleAuthButton />
+      </Stack>
     </Paper>
   );
 }

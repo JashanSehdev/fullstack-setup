@@ -16,6 +16,7 @@ import {
 import { OmitType } from '@nestjs/mapped-types';
 import { UpdateUserDto } from './dto/update-user-dto.js';
 import { rmSync } from 'fs';
+import { GoogleAuthDto } from '../auth/dto/google.dto.js';
 
 Injectable();
 export class UsersService {
@@ -25,6 +26,11 @@ export class UsersService {
   ) {}
 
   async create(createUser: CreateUser): Promise<DispatchUser> {
+    const user = this.userRepository.create(createUser);
+    return await this.userRepository.save(user);
+  }
+
+  async createWithGoogle(createUser : GoogleAuthDto) : Promise<DispatchUser > {
     const user = this.userRepository.create(createUser);
     return await this.userRepository.save(user);
   }
@@ -43,6 +49,17 @@ export class UsersService {
   async findOneSensitiveByEmail(email: string): Promise<User | null> {
     return this.userRepository.findOneBy({ email });
   }
+
+  async findOneByGoogleID(googleId: string): Promise<DispatchUser | null> {
+    const user =  await this.userRepository.findOneBy({ googleId });
+    if (!user) return null
+    
+    const {password, ...rest} = user;
+
+    return rest
+
+  }
+  
 
   async findOneByEmail(email: string): Promise<DispatchUser | null> {
     return await this.userRepository.findOneBy({ email });

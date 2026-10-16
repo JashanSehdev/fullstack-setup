@@ -9,7 +9,7 @@ import { RegisterUserDto } from './dto/register.dto.js';
 import bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from './dto/login.dto.js';
-import { GoogleDto } from './dto/google.dto.js';
+import { GoogleAuthDto } from './dto/google.dto.js';
 import { DispatchUser, IUser } from '../users/interfaces/user.interface.js';
 
 @Injectable()
@@ -70,8 +70,20 @@ export class AuthService {
     return this.jwtService.sign(payload)
   }
 
-  async googleAuth (googleDto : GoogleDto) {
-    //google authentication
+  async googleAuth (googleDto : GoogleAuthDto) {
+     let user = await this.usersService.findOneByGoogleID(googleDto.googleId)
+     let payload = {}
+     if (!user) {
+        user = await this.usersService.findOneByEmail(googleDto.email) 
+     }
+
+     if (!user) {
+      user  = await this.usersService.createWithGoogle(googleDto)
+     }
+
+     payload = { id : user.id, email : user.email, username : user.username, role : user.role}
+
+     return await this.jwtService.sign(payload)
   }
 
   async getMe(id : number) : Promise<DispatchUser | null> {

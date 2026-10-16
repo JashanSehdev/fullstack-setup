@@ -31,7 +31,7 @@ export class InitialSchema1792146828582 implements MigrationInterface {
                     {
                         name : 'password',
                         type : 'varchar',
-                        isNullable : false,
+                        isNullable : true,
                     },
 
                     {
@@ -40,6 +40,12 @@ export class InitialSchema1792146828582 implements MigrationInterface {
                         enum : ['admin', 'employee', 'undefined', 'manager'],
                         enumName : 'user_role_enum',
                         default: "'undefined'"
+                    },
+                    {
+                        name : 'googleId',
+                        type : 'varchar',
+                        isNullable : true,
+                        isUnique : true
                     },
 
                     {

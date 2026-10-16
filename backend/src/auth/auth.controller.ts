@@ -3,6 +3,7 @@ import type { Response } from 'express';
 import { AuthService } from './auth.service.js';
 import { RegisterUserDto } from './dto/register.dto.js';
 import { LoginUserDto } from './dto/login.dto.js';
+import { GoogleAuthDto } from './dto/google.dto.js';
 
 @Controller('auth')
 export class AuthController {
@@ -35,6 +36,19 @@ export class AuthController {
 
     return { message: 'Authentication successful' };
   }
+
+  @Post("google")
+  async googleLogin(@Body() googleAuthDto : GoogleAuthDto, @Res({passthrough: true}) response : Response){
+    const token = await this.authService.googleAuth(googleAuthDto);
+
+    response.cookie('access_token', token, {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 1 * 24 * 60 * 60 * 1000,
+    });
+     return { message: 'Authentication successful' };
+  }
   
 
   // @Post('google')
@@ -61,4 +75,6 @@ export class AuthController {
 
       return ({message: "User successfully logout"})
   }
+
+  
 }

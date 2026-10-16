@@ -14,14 +14,14 @@ export class User {
     @Column({type : 'varchar' ,length : 120, unique: true})
     email : string
 
-    @Column({type: 'varchar', length : 120})
+    @Column({type: 'varchar', length : 120, nullable : true})
     password : string
 
     @Column({type : 'enum', enum : Role, default : Role.UNDEFINED})
     role : Role
 
-    // @Column({type : 'varchar', length: 255, unique:true, nullable: true})
-    // googleId : string
+    @Column({type : 'varchar', length: 255, unique:true, nullable: true})
+    googleId : string
 
     // @Column({type :'varchar', length : 255, unique: true, nullable: true})
     // githubId : string
