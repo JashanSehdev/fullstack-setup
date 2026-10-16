@@ -7,7 +7,7 @@ services:
       container_name: nest-backend
       restart: unless-stopped
       env_file:
-        - ./.env
+        - .env
       environment:
         WATCHPACK_POLLING: "true"
       ports:
@@ -28,7 +28,7 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: admin
+      POSTGRES_PASSWORD: postgres
       POSTGRES_DB: test
     ports:
       - "5433:5432"

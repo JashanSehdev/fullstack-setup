@@ -1,12 +1,16 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Box, Button, Stack, TextField } from "@mui/material";
+import { Box, Button, Paper, Stack, TextField } from "@mui/material";
 import { InputFields, LoginInput, loginSchema } from "./login.type";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { zodResolver } from '@hookform/resolvers/zod';   
+import { zodResolver } from "@hookform/resolvers/zod";
 import { handleEmailLogin } from "@/actions/action";
 import { useState } from "react";
+import { signInWithEmail } from "@/lib/firebase/auth";
+import { enqueueSnackbar } from "notistack";
+import { useAppDispatch } from "@/features/store";
+import { loginUserAsync } from "@/features/auth/handle-auth/auth.action";
 const inputs: InputFields[] = [
   {
     name: "email",
@@ -23,7 +27,8 @@ const inputs: InputFields[] = [
 ];
 export default function LoginPage() {
   const router = useRouter();
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const dispatch = useAppDispatch();
 
   const {
     register,
@@ -34,18 +39,18 @@ export default function LoginPage() {
   });
 
   const onSubmit: SubmitHandler<LoginInput> = async (data: LoginInput) => {
-    try{
+    try {
       setLoading(true);
-      await handleEmailLogin(data.email, data.password)
+      await dispatch(loginUserAsync(data)).unwrap();
     } catch (Error) {
-      console.error(Error)
+      console.error(Error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-    
   };
+
   return (
-    <Box>
+    <Paper sx={{ maxWidth: "12rem" }}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack direction="column">
           {inputs.map((item) => (
@@ -59,10 +64,12 @@ export default function LoginPage() {
             />
           ))}
 
-          <Button loading={loading} type="submit" variant="contained">Login</Button>
+          <Button loading={loading} type="submit" variant="contained">
+            Login
+          </Button>
         </Stack>
       </form>
       <Button fullWidth>Google Button</Button>
-    </Box>
+    </Paper>
   );
 }
