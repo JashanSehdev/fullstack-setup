@@ -23,8 +23,8 @@
         "typeorm": "node ./node_modules/typeorm/cli-ts-node-esm.js",
         "migration:create": "typeorm migration:create",
         "migration:generate": "npm run typeorm -- migration:generate src/database/migrations/InitialSchema -d typeorm.config.ts",
-        "migration:run": "npm run typeorm -- migration:run -d typeorm.config.ts",
-        "migration:revert": "npm run typeorm -- migration:revert -d typeorm.config.ts",
+        "migration:run": "npm run typeorm -- migration:run -d src/database/typeorm.config.ts",
+        "migration:revert": "npm run typeorm -- migration:revert -d src/database/typeorm.config.ts",
         "seed": "node --loader ts-node/esm src/database/seed/seed.ts"
     },
     "dependencies": {
