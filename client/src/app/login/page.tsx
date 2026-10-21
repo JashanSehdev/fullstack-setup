@@ -16,16 +16,16 @@ import Link from "next/link";
 
 const inputs: InputFields[] = [
   {
-    name: "email",
-    type: "email",
-    label: "Enter Your email",
-    placeholder: "Enter Your Email",
+    name: "identifier",
+    type: "text",
+    label: "Enter Your email or username",
+    placeholder: "eg : jash@gmail.com",
   },
   {
     name: "password",
     type: "password",
     label: "Enter Your password",
-    placeholder: "Enter Your Password",
+    placeholder: "Enter your password",
   },
 ];
 export default function LoginPage() {
@@ -45,6 +45,7 @@ export default function LoginPage() {
     try {
       setLoading(true);
       await dispatch(loginUserAsync(data)).unwrap();
+      router.replace("/")
     } catch (Error) {
       console.error(Error);
     } finally {

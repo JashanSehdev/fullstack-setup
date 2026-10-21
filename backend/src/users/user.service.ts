@@ -1,21 +1,15 @@
 import {
-  ConflictException,
   Injectable,
   NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/users.entity.js';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './dto/create-user-dto.js';
 import {
   CreateUser,
   DispatchUser,
-  IUser,
 } from './interfaces/user.interface.js';
-import { OmitType } from '@nestjs/mapped-types';
 import { UpdateUserDto } from './dto/update-user-dto.js';
-import { rmSync } from 'fs';
 import { GoogleAuthDto } from '../auth/dto/google.dto.js';
 
 Injectable();
@@ -60,7 +54,9 @@ export class UsersService {
 
   }
   
-
+  async findOneByUsername (username : string): Promise<User | null> {
+    return await this.userRepository.findOneBy({username})
+  }
   async findOneByEmail(email: string): Promise<DispatchUser | null> {
     return await this.userRepository.findOneBy({ email });
   }

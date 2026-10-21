@@ -4,7 +4,11 @@ import {
 } from "react-hook-form";
 
 export const registerSchema = z.object({
-  username: z.string().min(1, 'Username required').max(15, 'username should bot greater than 15 lines'),
+  username: z.string()
+              .trim()
+              .min(3, 'Username must be at least 3 character long')
+              .max(20, 'username must be atmost 20 characters')
+              .regex(/^[a-zA-Z][a-zA-Z0-9_]*$/, 'Username must start with a letter and contain only letters, numbers, and underscores'),
   email: z.email(),
   password: z.string().min(6, 'Password must be least of 6 characters').max(12, 'Password must be atmost 12 characters'),
   confirmPassword: z.string().min(6, 'Password must be least of 6 characters').max(12, 'Password must be atmost 12 characters'),

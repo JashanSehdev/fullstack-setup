@@ -19,6 +19,7 @@ export class InitialSchema1792146828582 implements MigrationInterface {
                         name : 'username',
                         type : 'varchar',
                         isNullable : false,
+                        isUnique : true
                     },
 
                     {

@@ -20,10 +20,14 @@ export class AuthService {
   ) {}
 
   async registerUser(registerUserDto: RegisterUserDto): Promise<string> {
-    const existingUser = await this.usersService.findOneByEmail(
+    let existingUser = await this.usersService.findOneByEmail(
       registerUserDto.email,
     );
 
+    if(!existingUser) existingUser = await this.usersService.findOneByUsername(
+      registerUserDto.username
+    )
+    
     if (existingUser)
       throw new ConflictException({
         code: 'ALREADY_EXIST',
@@ -46,6 +50,8 @@ export class AuthService {
 
     return this.jwtService.sign(payload);
   }
+
+
 
   async loginUser(loginUserDto: LoginUserDto): Promise<string> {
     const user = await this.usersService.findOneSensitiveByEmail(

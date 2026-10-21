@@ -7,7 +7,7 @@ services:
       container_name: nest-backend
       restart: unless-stopped
       env_file:
-        - .env
+        - ./src/.env
       environment:
         WATCHPACK_POLLING: "true"
       ports:
