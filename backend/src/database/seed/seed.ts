@@ -1,5 +1,5 @@
-import { AppDataSource } from '../../../typeorm.config.ts';
-import { User } from '../../users/entities/users.entity.ts';
+import { AppDataSource } from '../typeorm.config.js';
+import { User } from '../../users/entities/users.entity.js';
 import * as bcrypt from 'bcryptjs';
 import { Role } from '../../users/enum/roles.enum.js';
 

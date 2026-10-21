@@ -32,7 +32,7 @@ import { AuthMiddleware } from './middleware/auth.middleware.js';
         return {
           type: 'postgres',
           host: config.get<string>('DB_HOST'),
-          port: config.get<number>('DB_PORT', 5432),
+          port: config.get<number>('DB_PORT', 5433),
           username: config.get<string>('DB_USERNAME'),
           password: config.get<string>('DB_PASSWORD'),
           database: config.get<string>('DB_NAME'),
